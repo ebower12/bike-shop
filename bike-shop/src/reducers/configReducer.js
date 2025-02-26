@@ -1,10 +1,12 @@
+import ConfigData from "../config-data";
+
 export const initialState = {
   options: {
-    frame: "Full-Suspension",
-    finish: "Matte",
-    wheels: "Road",
-    rimColor: "Red",
-    chain: "Single-Speed",
+    frame: ConfigData.frame[0],
+    finish: ConfigData.finish[0],
+    wheels: ConfigData.wheels[0],
+    rimColor: ConfigData.rimColor[0],
+    chain: ConfigData.chain[0],
   },
 };
 
@@ -14,6 +16,14 @@ function configReducer(state, action) {
       const newState = {
         options: action.options,
       };
+
+      if (action.options.wheels === "Mountain") {
+        newState.options.frame = "Full-Suspension";
+      }
+
+      if (action.options.wheels === "Fat Bike") {
+        newState.options.rimColor = undefined;
+      }
 
       state = newState;
       break;

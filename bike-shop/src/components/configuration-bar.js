@@ -17,6 +17,14 @@ export default function ConfigurationBar() {
     });
   }
 
+  function isValidConfig(category, option) {
+    if (state.options.wheels === "Mountain") {
+      return category === "frame" && option !== "Full-Suspension";
+    } else if (state.options.wheels === "Fat Bike") {
+      return category === "rimColor";
+    } else return false;
+  }
+
   try {
     const listOptions = () =>
       Object.keys(ConfigData).map((category) => {
@@ -25,8 +33,9 @@ export default function ConfigurationBar() {
             <Form.Check
               type="radio"
               id={option}
-              key={`${category}-${option}`}
               label={option}
+              key={`${category}-${option}`}
+              disabled={isValidConfig(category, option)}
               checked={state.options[category] === option}
               onChange={() => handleRadioSelect(category, option)}
             />
