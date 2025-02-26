@@ -1,0 +1,13 @@
+.nav-bar {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: row;
+  align-items: right;
+  justify-content: right;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.nav-link {
+  padding: 10px;
+}
