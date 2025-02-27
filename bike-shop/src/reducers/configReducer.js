@@ -1,12 +1,17 @@
-import ConfigData from "../config-data";
-
 export const initialState = {
-  options: {
-    frame: ConfigData.frame[0],
-    finish: ConfigData.finish[0],
-    wheels: ConfigData.wheels[0],
-    rimColor: ConfigData.rimColor[0],
-    chain: ConfigData.chain[0],
+  availableOptions: {
+    frame: ["Full-Suspension", "Diamond", "Step-Through"],
+    finish: ["Matte", "Shiny"],
+    wheels: ["Road", "Mountain", "Fat Bike"],
+    rimColor: ["Red", "Black", "Blue"],
+    chain: ["Single-Speed", "8-Speed"],
+  },
+  selectedOptions: {
+    frame: "Full-Suspension",
+    finish: "Matte",
+    wheels: "Road",
+    rimColor: "Red",
+    chain: "Single-Speed",
   },
 };
 
@@ -14,16 +19,26 @@ function configReducer(state, action) {
   switch (action.type) {
     case "update": {
       const newState = {
-        options: action.options,
+        availableOptions: action.availableOptions,
+        selectedOptions: action.selectedOptions,
       };
 
-      if (action.options.wheels === "Mountain") {
-        newState.options.frame = "Full-Suspension";
+      if (action.selectedOptions.wheels === "Mountain") {
+        newState.selectedOptions.frame = "Full-Suspension";
       }
 
-      if (action.options.wheels === "Fat Bike") {
-        newState.options.rimColor = undefined;
+      if (action.selectedOptions.wheels === "Fat Bike") {
+        newState.selectedOptions.rimColor = undefined;
       }
+
+      state = newState;
+      break;
+    }
+    case "updateAvailableOptions": {
+      const newState = {
+        availableOptions: action.availableOptions,
+        selectedOptions: action.selectedOptions,
+      };
 
       state = newState;
       break;
