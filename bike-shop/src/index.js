@@ -5,7 +5,6 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import App from "./App";
 import ConfigProvider from "./contexts/ConfigContext";
 import InternalApp from "./Internal";
-import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

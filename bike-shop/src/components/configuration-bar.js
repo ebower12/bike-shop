@@ -1,8 +1,9 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 import { ConfigContext } from "../contexts/ConfigContext";
 
-export default function ConfigurationBar() {
+export default function ConfigurationBar({ addItemToCartState }) {
   const { configState, dispatch } = useContext(ConfigContext);
 
   function handleRadioSelect(category, option) {
@@ -22,6 +23,13 @@ export default function ConfigurationBar() {
     } else if (configState.selectedOptions.wheels === "Fat Bike") {
       return category === "rimColor";
     } else return false;
+  }
+
+  function addItemToCart() {
+    const newItem = {
+      ...configState.selectedOptions,
+    };
+    addItemToCartState(newItem);
   }
 
   try {
@@ -49,7 +57,12 @@ export default function ConfigurationBar() {
         );
       });
 
-    return <Form>{listOptions()}</Form>;
+    return (
+      <Form>
+        {listOptions()}
+        <Button onClick={() => addItemToCart()}>Add to cart</Button>
+      </Form>
+    );
   } catch (err) {
     console.log(err);
   }

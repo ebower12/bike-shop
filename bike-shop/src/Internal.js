@@ -28,10 +28,28 @@ function InternalApp() {
     });
   }
 
+  function removePart(category, option) {
+    dispatch({
+      type: "updateAvailableOptions",
+      availableOptions: {
+        ...configState.availableOptions,
+        [category]: configState.availableOptions[category].filter(
+          (part) => part !== option
+        ),
+      },
+      selectedOptions: configState.selectedOptions,
+    });
+  }
+
   const currentOptions = () =>
     Object.keys(configState.availableOptions).map((category) => {
       const options = configState.availableOptions[category].map((option) => {
-        return <li key={`${category}-${option}`}>{option}</li>;
+        return (
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <li key={`${category}-${option}`}>{option}</li>
+            <Button onClick={() => removePart(category, option)}>Remove</Button>
+          </div>
+        );
       });
 
       return (
