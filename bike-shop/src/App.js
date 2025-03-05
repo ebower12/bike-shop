@@ -1,12 +1,13 @@
 import "./css/App.css";
-import { useReducer } from "react";
+import { useContext } from "react";
+import { NavLink } from "react-router";
 import Button from "react-bootstrap/Button";
 import NavBar from "./components/nav-bar";
 import ConfigurationBar from "./components/configuration-bar";
-import cartReducer, { initialState } from "./reducers/cartReducer";
+import { CartContext } from "./contexts/CartContext";
 
 function App() {
-  const [cartState, cartDispatch] = useReducer(cartReducer, initialState);
+  const { cartState, cartDispatch } = useContext(CartContext);
 
   function addItemToCartState(newItem) {
     cartDispatch({
@@ -18,7 +19,9 @@ function App() {
   return (
     <div className="App">
       <NavBar />
-      <Button>{`Cart ${cartState.cartItems.length}`}</Button>
+      <Button>
+        <NavLink to="/cart">{`Cart ${cartState.cartItems.length}`}</NavLink>
+      </Button>
       <header className="App-header">
         <ConfigurationBar
           cartState={cartState}
