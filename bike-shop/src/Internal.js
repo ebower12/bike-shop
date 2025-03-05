@@ -1,17 +1,18 @@
 import "./css/internal.css";
-import { useState, useReducer } from "react";
+import { useState, useContext } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
-import SplitButton from "react-bootstrap/DropdownButton";
+import DropdownButton from "react-bootstrap/DropdownButton";
 import InputGroup from "react-bootstrap/InputGroup";
 import NavBar from "./components/nav-bar";
-import configReducer, { initialState } from "./reducers/configReducer";
+import { ConfigContext } from "./contexts/ConfigContext";
 
 function InternalApp() {
   const [newPartName, setNewPartName] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("frame");
-  const [configState, dispatch] = useReducer(configReducer, initialState);
+  const { configState, dispatch } = useContext(ConfigContext);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   function addPart() {
     dispatch({
@@ -65,9 +66,14 @@ function InternalApp() {
         <div>
           <Form>
             <InputGroup>
-              <SplitButton variant="outline-secondary" title="Category">
+              <DropdownButton
+                variant="outline-secondary"
+                title="Category"
+                show={dropdownOpen}
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
                 {currentCategories()}
-              </SplitButton>
+              </DropdownButton>
               <Form.Control
                 placeholder="Add new part"
                 value={newPartName}

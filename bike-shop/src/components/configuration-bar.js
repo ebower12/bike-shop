@@ -1,10 +1,9 @@
-import React from "react";
-import { useReducer } from "react";
+import React, { useContext } from "react";
 import Form from "react-bootstrap/Form";
-import configReducer, { initialState } from "../reducers/configReducer";
+import { ConfigContext } from "../contexts/ConfigContext";
 
 export default function ConfigurationBar() {
-  const [configState, dispatch] = useReducer(configReducer, initialState);
+  const { configState, dispatch } = useContext(ConfigContext);
 
   function handleRadioSelect(category, option) {
     dispatch({
