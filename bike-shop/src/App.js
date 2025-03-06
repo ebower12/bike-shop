@@ -1,6 +1,6 @@
 import "./css/App.css";
 import { useContext } from "react";
-import { NavLink } from "react-router";
+import { useNavigate } from "react-router";
 import Button from "react-bootstrap/Button";
 import NavBar from "./components/nav-bar";
 import ConfigurationBar from "./components/configuration-bar";
@@ -8,6 +8,7 @@ import { CartContext } from "./contexts/CartContext";
 
 function App() {
   const { cartState, cartDispatch } = useContext(CartContext);
+  const navigate = useNavigate();
 
   function addItemToCartState(newItem) {
     cartDispatch({
@@ -19,8 +20,8 @@ function App() {
   return (
     <div className="App">
       <NavBar />
-      <Button>
-        <NavLink to="/cart">{`Cart ${cartState.cartItems.length}`}</NavLink>
+      <Button variant="success" onClick={() => navigate("/cart")}>
+        {`Cart ${cartState.cartItems.length}`}
       </Button>
       <header className="App-header">
         <ConfigurationBar

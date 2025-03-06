@@ -42,7 +42,10 @@ export default function ConfigurationBar({ addItemToCartState }) {
               id={option}
               label={option}
               key={`${category}-${option}`}
-              disabled={isValidConfig(category, option)}
+              disabled={
+                isValidConfig(category, option) ||
+                option.includes("Out of Stock")
+              }
               checked={configState.selectedOptions[category] === option}
               onChange={() => handleRadioSelect(category, option)}
             />

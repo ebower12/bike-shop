@@ -3,7 +3,6 @@ import { useState, useContext } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
 import InputGroup from "react-bootstrap/InputGroup";
 import NavBar from "./components/nav-bar";
 import { ConfigContext } from "./contexts/ConfigContext";
@@ -12,7 +11,6 @@ function InternalApp() {
   const [newPartName, setNewPartName] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("frame");
   const { configState, dispatch } = useContext(ConfigContext);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   function addPart() {
     dispatch({
@@ -41,6 +39,23 @@ function InternalApp() {
     });
   }
 
+  function toggleOutOfStock(category, option) {
+    dispatch({
+      type: "updateAvailableOptions",
+      availableOptions: {
+        ...configState.availableOptions,
+        [category]: configState.availableOptions[category].map((part) => {
+          if (part === option) {
+            if (part.includes("(Out of Stock)")) {
+              return part.replace(" (Out of Stock)", "");
+            } else return `${part} (Out of Stock)`;
+          } else return part;
+        }),
+      },
+      selectedOptions: configState.selectedOptions,
+    });
+  }
+
   const currentOptions = () =>
     Object.keys(configState.availableOptions).map((category) => {
       const options = configState.availableOptions[category].map((option) => {
@@ -48,6 +63,11 @@ function InternalApp() {
           <div style={{ display: "flex", flexDirection: "row" }}>
             <li key={`${category}-${option}`}>{option}</li>
             <Button onClick={() => removePart(category, option)}>Remove</Button>
+            <Form.Switch
+              label="Out of stock"
+              checked={option.includes("Out of Stock")}
+              onClick={() => toggleOutOfStock(category, option)}
+            />
           </div>
         );
       });
@@ -84,14 +104,12 @@ function InternalApp() {
         <div>
           <Form>
             <InputGroup>
-              <DropdownButton
-                variant="outline-secondary"
-                title="Category"
-                show={dropdownOpen}
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-              >
-                {currentCategories()}
-              </DropdownButton>
+              <Dropdown>
+                <Dropdown.Toggle variant="outline-secondary">
+                  {selectedCategory}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>{currentCategories()}</Dropdown.Menu>
+              </Dropdown>
               <Form.Control
                 placeholder="Add new part"
                 value={newPartName}
