@@ -21,7 +21,7 @@ function CartApp() {
       <ul>
         {cartState.cartItems.map((item) => (
           <div style={{ display: "flex", flexDirection: "row" }}>
-            <li key={item.id}>{JSON.stringify(item)}</li>
+            <li key={item.id}>{Object.values(item).join(", ")}</li>
             <Button onClick={() => removeItemFromCart(item)}>Remove</Button>
           </div>
         ))}

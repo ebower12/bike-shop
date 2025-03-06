@@ -9,6 +9,7 @@ import InternalApp from "./Internal";
 import CartApp from "./Cart";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
   <StrictMode>
     <CartProvider>
