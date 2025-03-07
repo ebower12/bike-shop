@@ -1,35 +1,39 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import CloseButton from "react-bootstrap/CloseButton";
 import { BikesContext } from "../contexts/BikesContext";
-import { ConfigContext } from "../contexts/ConfigContext";
+import { updateBikes } from "../Router";
 
-function NewBikeModal({ showModal, handleClose }) {
+function NewBikeModal({ showModal, handleClose, availableOptions }) {
   const { bikesState, dispatch } = useContext(BikesContext);
-  const { configState } = useContext(ConfigContext);
-
   const [newBikeState, setNewBikeState] = useState({
     name: "",
     parts: {},
   });
 
-  function handleAddNewBike() {
-    dispatch({
-      type: "update",
-      availableBikes: [
+  const handleAddNewBike = () => {
+    async function updateData() {
+      const newBikes = [
         ...bikesState.availableBikes,
         {
           id: bikesState.availableBikes.length + 1,
           name: newBikeState.name,
           parts: newBikeState.parts,
         },
-      ],
-    });
+      ];
+      const result = await updateBikes(newBikes);
 
+      dispatch({
+        type: "update",
+        availableBikes: result.availableBikes,
+      });
+    }
+
+    updateData();
     handleClose();
-  }
+  };
 
   function handleRadioSelect(category, option) {
     setNewBikeState({
@@ -49,8 +53,8 @@ function NewBikeModal({ showModal, handleClose }) {
   }
 
   const listOptions = () =>
-    Object.keys(configState.availableOptions).map((category) => {
-      const options = configState.availableOptions[category].map((option) => {
+    Object.keys(availableOptions).map((category) => {
+      const options = availableOptions[category].map((option) => {
         return (
           <Form.Check
             type="radio"

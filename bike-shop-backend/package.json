@@ -1,0 +1,23 @@
+{
+  "name": "bike-shop-backend",
+  "version": "1.0.0",
+  "description": "backend server for the bike shop",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm test",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "@ebower12/bike-shop"
+  },
+  "author": "@ebower12",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

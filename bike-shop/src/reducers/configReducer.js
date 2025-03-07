@@ -1,11 +1,5 @@
 export const initialState = {
-  availableOptions: {
-    frame: ["Full-Suspension", "Diamond", "Step-Through"],
-    finish: ["Matte", "Shiny"],
-    wheels: ["Road", "Mountain", "Fat Bike"],
-    rimColor: ["Red", "Black", "Blue"],
-    chain: ["Single-Speed", "8-Speed"],
-  },
+  availableOptions: {},
   selectedOptions: {
     frame: "Full-Suspension",
     finish: "Matte",
@@ -30,15 +24,6 @@ function configReducer(state, action) {
       if (action.selectedOptions.wheels === "Fat Bike") {
         newState.selectedOptions.rimColor = undefined;
       }
-
-      state = newState;
-      break;
-    }
-    case "updateAvailableOptions": {
-      const newState = {
-        availableOptions: action.availableOptions,
-        selectedOptions: action.selectedOptions,
-      };
 
       state = newState;
       break;

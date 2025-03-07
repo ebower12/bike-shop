@@ -1,18 +1,40 @@
 import "./css/cart.css";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import NavBar from "./components/nav-bar";
 import { CartContext } from "./contexts/CartContext";
+import { getCart, updateCart } from "./Router";
 
 function CartApp() {
   const { cartState, cartDispatch } = useContext(CartContext);
 
-  function removeItemFromCart(item) {
-    cartDispatch({
-      type: "update",
-      cartItems: cartState.cartItems.filter((cartItem) => cartItem !== item),
-    });
-  }
+  useEffect(() => {
+    async function fetchData() {
+      const result = await getCart();
+
+      cartDispatch({
+        type: "update",
+        cartItems: result.cartItems,
+      });
+    }
+
+    fetchData();
+  }, []);
+
+  const removeItemFromCart = (item) => {
+    async function updateData() {
+      const newCart = {
+        cartItems: cartState.cartItems.filter((cartItem) => cartItem !== item),
+      };
+      const result = await updateCart(newCart);
+      cartDispatch({
+        type: "update",
+        cartItems: result.cartItems,
+      });
+    }
+
+    updateData();
+  };
 
   return (
     <div className="cart-page">
@@ -21,6 +43,7 @@ function CartApp() {
       <ul style={{ listStyleType: "none" }}>
         {cartState.cartItems.map((item) => (
           <div
+            key={item.id}
             style={{
               display: "flex",
               flexDirection: "row",
@@ -33,7 +56,7 @@ function CartApp() {
             >
               Remove
             </Button>
-            <li key={item.id}>{Object.values(item.parts).join(", ")}</li>
+            <li>{Object.values(item.parts).join(", ")}</li>
           </div>
         ))}
       </ul>

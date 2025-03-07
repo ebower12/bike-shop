@@ -1,5 +1,5 @@
 import "./css/internal.css";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import CloseButton from "react-bootstrap/CloseButton";
@@ -8,6 +8,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import NavBar from "./components/nav-bar";
 import BikesView from "./components/bikes-view";
 import { ConfigContext } from "./contexts/ConfigContext";
+import { getAvailableOptions, updateAvailableOptions } from "./Router";
 
 function InternalApp() {
   const [newPartName, setNewPartName] = useState("");
@@ -15,37 +16,64 @@ function InternalApp() {
   const [selectedCategory, setSelectedCategory] = useState("frame");
   const { configState, dispatch } = useContext(ConfigContext);
 
-  function addPart() {
-    dispatch({
-      type: "updateAvailableOptions",
-      availableOptions: {
+  useEffect(() => {
+    async function fetchData() {
+      const result = await getAvailableOptions();
+
+      dispatch({
+        type: "update",
+        availableOptions: result,
+        selectedOptions: configState.selectedOptions,
+      });
+    }
+
+    fetchData();
+  }, []);
+
+  const addPart = () => {
+    async function updateData() {
+      const newOptions = {
         ...configState.availableOptions,
         [selectedCategory]: [
           ...configState.availableOptions[selectedCategory],
           newPartName,
         ],
-      },
-      selectedOptions: configState.selectedOptions,
-    });
-  }
+      };
+      const result = await updateAvailableOptions(newOptions);
 
-  function removePart(category, option) {
-    dispatch({
-      type: "updateAvailableOptions",
-      availableOptions: {
+      dispatch({
+        type: "update",
+        availableOptions: result,
+        selectedOptions: configState.selectedOptions,
+      });
+    }
+
+    updateData();
+  };
+
+  const removePart = (category, option) => {
+    async function updateData() {
+      const newOptions = {
         ...configState.availableOptions,
         [category]: configState.availableOptions[category].filter(
           (part) => part !== option
         ),
-      },
-      selectedOptions: configState.selectedOptions,
-    });
-  }
+      };
+      const result = await updateAvailableOptions(newOptions);
 
-  function toggleOutOfStock(category, option) {
-    dispatch({
-      type: "updateAvailableOptions",
-      availableOptions: {
+      dispatch({
+        type: "update",
+        availableOptions: result,
+        selectedOptions: configState.selectedOptions,
+      });
+    }
+
+    updateData();
+  };
+
+  const toggleOutOfStock = (category, option) => {
+    async function updateData() {
+      const newOptions = {
         ...configState.availableOptions,
         [category]: configState.availableOptions[category].map((part) => {
           if (part === option) {
@@ -54,30 +82,52 @@ function InternalApp() {
             } else return `${part} (Out of Stock)`;
           } else return part;
         }),
-      },
-      selectedOptions: configState.selectedOptions,
-    });
-  }
+      };
+      const result = await updateAvailableOptions(newOptions);
+      console.log(result);
 
-  function addCatergory(category) {
-    dispatch({
-      type: "updateAvailableOptions",
-      availableOptions: {
+      dispatch({
+        type: "update",
+        availableOptions: result,
+        selectedOptions: configState.selectedOptions,
+      });
+    }
+
+    updateData();
+  };
+
+  const addCatergory = (category) => {
+    async function updateData() {
+      const newOptions = {
         ...configState.availableOptions,
         [category]: [],
-      },
-      selectedOptions: configState.selectedOptions,
-    });
-  }
+      };
+      const result = await updateAvailableOptions(newOptions);
+
+      dispatch({
+        type: "update",
+        availableOptions: result,
+        selectedOptions: configState.selectedOptions,
+      });
+    }
+
+    updateData();
+  };
 
   function removeCategory(category) {
-    const newAvailableOptions = { ...configState.availableOptions };
-    delete newAvailableOptions[category];
-    dispatch({
-      type: "updateAvailableOptions",
-      availableOptions: newAvailableOptions,
-      selectedOptions: configState.selectedOptions,
-    });
+    async function updateData() {
+      const newOptions = { ...configState.availableOptions };
+      delete newOptions[category];
+      const result = await updateAvailableOptions(newOptions);
+
+      dispatch({
+        type: "update",
+        availableOptions: result,
+        selectedOptions: configState.selectedOptions,
+      });
+    }
+
+    updateData();
   }
 
   const currentOptions = () =>
@@ -189,7 +239,10 @@ function InternalApp() {
               <Button onClick={() => addPart()}>Submit</Button>
             </InputGroup>
           </Form>
-          <BikesView internal={true} />
+          <BikesView
+            internal={true}
+            availableOptions={configState.availableOptions}
+          />
         </div>
       </header>
     </div>

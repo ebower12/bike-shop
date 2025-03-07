@@ -1,10 +1,25 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { ConfigContext } from "../contexts/ConfigContext";
+import { getAvailableOptions } from "../Router";
 
-export default function ConfigurationBar({ addItemToCartState }) {
+export default function ConfigurationBar({ addItemToCart }) {
   const { configState, dispatch } = useContext(ConfigContext);
+
+  useEffect(() => {
+    async function fetchData() {
+      const result = await getAvailableOptions();
+
+      dispatch({
+        type: "update",
+        availableOptions: result,
+        selectedOptions: configState.selectedOptions,
+      });
+    }
+
+    fetchData();
+  }, []);
 
   function handleRadioSelect(category, option) {
     dispatch({
@@ -25,13 +40,14 @@ export default function ConfigurationBar({ addItemToCartState }) {
     } else return false;
   }
 
-  function addItemToCart() {
+  function addItemToCartProp() {
     const newItem = {
+      id: Math.random(),
       parts: {
         ...configState.selectedOptions,
       },
     };
-    addItemToCartState(newItem);
+    addItemToCart(newItem);
   }
 
   try {
@@ -65,7 +81,7 @@ export default function ConfigurationBar({ addItemToCartState }) {
     return (
       <Form>
         {listOptions()}
-        <Button onClick={() => addItemToCart()}>Add to cart</Button>
+        <Button onClick={() => addItemToCartProp()}>Add to cart</Button>
       </Form>
     );
   } catch (err) {
