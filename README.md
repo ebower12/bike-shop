@@ -1,10 +1,15 @@
 # bike-shop
 
-This is a basic example of a web shop that sells premade and custom bicycles. You can run the app locally by running `npm start` from within the `bike-shop` directory and then navigating to `localhost:3000` in a web browser.
+This is a basic example of a web shop that sells premade and custom bicycles.
+
+To run the app locally:
+
+- Run `npm run dev` from within the `bike-shop-backend` directory to stand up the backend API locally on port 3001.
+- Run `npm start` from within the `bike-shop` directory to stand up the frontend, then navigate to `localhost:3000` in a web browser.
 
 ## Decisions
 
-- For simplicity I'm storing the cart items and saved bike configurations in local storage. In a fully functioning app there would be a DB on the backend to save this information in order to better persist it across sessions.
+- I chose a react app for the frontend and an express server for the backend. React provides excellent functionality for a frontend webapp, including state management and dynamic components, and express is very fast and easy to set up for a simple backend API.
 
 - No authentication was implemented, but in a full app a simple multi-role authentication flow could be implemented. At minimum there would be `user` and `admin` roles. Access to the internal configuration page would be placed behind a role based authorization check.
 

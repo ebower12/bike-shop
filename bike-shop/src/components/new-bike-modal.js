@@ -27,7 +27,7 @@ function NewBikeModal({ showModal, handleClose, availableOptions }) {
 
       dispatch({
         type: "update",
-        availableBikes: result.availableBikes,
+        availableBikes: result,
       });
     }
 
