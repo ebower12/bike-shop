@@ -18,11 +18,22 @@ function CartApp() {
     <div className="cart-page">
       <NavBar />
       <h1>Cart</h1>
-      <ul>
+      <ul style={{ listStyleType: "none" }}>
         {cartState.cartItems.map((item) => (
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            <li key={item.id}>{Object.values(item).join(", ")}</li>
-            <Button onClick={() => removeItemFromCart(item)}>Remove</Button>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Button
+              style={{ marginRight: "10px" }}
+              onClick={() => removeItemFromCart(item)}
+            >
+              Remove
+            </Button>
+            <li key={item.id}>{Object.values(item.parts).join(", ")}</li>
           </div>
         ))}
       </ul>

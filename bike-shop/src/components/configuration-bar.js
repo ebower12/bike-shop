@@ -27,7 +27,9 @@ export default function ConfigurationBar({ addItemToCartState }) {
 
   function addItemToCart() {
     const newItem = {
-      ...configState.selectedOptions,
+      parts: {
+        ...configState.selectedOptions,
+      },
     };
     addItemToCartState(newItem);
   }

@@ -10,14 +10,6 @@ function NewBikeModal({ showModal, handleClose }) {
   const { bikesState, dispatch } = useContext(BikesContext);
   const { configState } = useContext(ConfigContext);
 
-  const initialState = Object.keys(configState.availableOptions).map(
-    (category) => {
-      return {
-        [category]: configState.selectedOptions[category],
-      };
-    }
-  );
-
   const [newBikeState, setNewBikeState] = useState({
     name: "",
     parts: {},
@@ -65,9 +57,6 @@ function NewBikeModal({ showModal, handleClose }) {
             id={option}
             label={option}
             key={`${category}-${option}`}
-            // disabled={
-            //   isValidConfig(category, option) || option.includes("Out of Stock")
-            // }
             checked={newBikeState.parts[category] === option}
             onChange={() => handleRadioSelect(category, option)}
           />
