@@ -2,13 +2,16 @@ import "./css/internal.css";
 import { useState, useContext } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import CloseButton from "react-bootstrap/CloseButton";
 import Dropdown from "react-bootstrap/Dropdown";
 import InputGroup from "react-bootstrap/InputGroup";
 import NavBar from "./components/nav-bar";
+import BikesView from "./components/bikes-view";
 import { ConfigContext } from "./contexts/ConfigContext";
 
 function InternalApp() {
   const [newPartName, setNewPartName] = useState("");
+  const [newCategoryName, setNewCategoryName] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("frame");
   const { configState, dispatch } = useContext(ConfigContext);
 
@@ -56,25 +59,76 @@ function InternalApp() {
     });
   }
 
+  function addCatergory(category) {
+    dispatch({
+      type: "updateAvailableOptions",
+      availableOptions: {
+        ...configState.availableOptions,
+        [category]: [],
+      },
+      selectedOptions: configState.selectedOptions,
+    });
+  }
+
+  function removeCategory(category) {
+    const newAvailableOptions = { ...configState.availableOptions };
+    delete newAvailableOptions[category];
+    dispatch({
+      type: "updateAvailableOptions",
+      availableOptions: newAvailableOptions,
+      selectedOptions: configState.selectedOptions,
+    });
+  }
+
   const currentOptions = () =>
     Object.keys(configState.availableOptions).map((category) => {
       const options = configState.availableOptions[category].map((option) => {
         return (
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            <li key={`${category}-${option}`}>{option}</li>
-            <Button onClick={() => removePart(category, option)}>Remove</Button>
-            <Form.Switch
-              label="Out of stock"
-              checked={option.includes("Out of Stock")}
-              onClick={() => toggleOutOfStock(category, option)}
-            />
+          <div
+            key={`${category}-${option}`}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: "10px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: "10px",
+              }}
+            >
+              <CloseButton
+                variant="white"
+                onClick={() => removePart(category, option)}
+              />
+              <Form.Switch
+                defaultChecked={!option.includes("Out of Stock")}
+                onClick={() => toggleOutOfStock(category, option)}
+              />
+            </div>
+            <li>{option}</li>
           </div>
         );
       });
 
       return (
-        <ul key={category} style={{ display: "grid", justifyItems: "left" }}>
-          <label>{category}</label>
+        <ul
+          key={category}
+          style={{
+            display: "grid",
+            listStyleType: "none",
+          }}
+        >
+          <div style={{ alignItems: "center", display: "flex" }}>
+            <CloseButton
+              variant="white"
+              onClick={() => removeCategory(category)}
+            />
+            <label style={{ fontSize: 32 }}>{category}</label>
+          </div>
           {options}
         </ul>
       );
@@ -97,12 +151,28 @@ function InternalApp() {
         className="internal-page"
         style={{ display: "flex", flexDirection: "row" }}
       >
-        <div>
+        <div style={{ padding: 20, flexBasis: "50%" }}>
           <h2>Current Options</h2>
           {currentOptions()}
         </div>
-        <div>
+        <div
+          style={{
+            marginTop: "10%",
+            marginLeft: "10%",
+            flexBasis: "50%",
+          }}
+        >
           <Form>
+            <InputGroup>
+              <Form.Control
+                maxLength={16}
+                placeholder="Add new category"
+                onChange={(input) => setNewCategoryName(input.target.value)}
+              />
+              <Button onClick={() => addCatergory(newCategoryName)}>
+                Add Category
+              </Button>
+            </InputGroup>
             <InputGroup>
               <Dropdown>
                 <Dropdown.Toggle variant="outline-secondary">
@@ -111,6 +181,7 @@ function InternalApp() {
                 <Dropdown.Menu>{currentCategories()}</Dropdown.Menu>
               </Dropdown>
               <Form.Control
+                maxLength={16}
                 placeholder="Add new part"
                 value={newPartName}
                 onChange={(input) => setNewPartName(input.target.value)}
@@ -118,6 +189,7 @@ function InternalApp() {
               <Button onClick={() => addPart()}>Submit</Button>
             </InputGroup>
           </Form>
+          <BikesView internal={true} />
         </div>
       </header>
     </div>
