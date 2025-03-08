@@ -1,4 +1,4 @@
-export const initialState = {
+export const initialConfigState = {
   availableOptions: {},
   selectedOptions: {
     frame: "Full-Suspension",

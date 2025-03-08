@@ -1,12 +1,12 @@
 import "./css/cart.css";
-import { useContext, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import NavBar from "./components/nav-bar";
-import { CartContext } from "./contexts/CartContext";
+import cartReducer, { initialCartState } from "./reducers/cartReducer";
 import { getCart, updateCart } from "./Router";
 
 function CartApp() {
-  const { cartState, cartDispatch } = useContext(CartContext);
+  const [cartState, cartDispatch] = useReducer(cartReducer, initialCartState);
 
   useEffect(() => {
     async function fetchData() {

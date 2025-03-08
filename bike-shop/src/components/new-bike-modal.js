@@ -1,39 +1,24 @@
-import { useState, useContext, useEffect } from "react";
+import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import CloseButton from "react-bootstrap/CloseButton";
-import { BikesContext } from "../contexts/BikesContext";
-import { updateBikes } from "../Router";
 
-function NewBikeModal({ showModal, handleClose, availableOptions }) {
-  const { bikesState, dispatch } = useContext(BikesContext);
+function NewBikeModal({
+  showModal,
+  handleClose,
+  availableOptions,
+  addNewBike,
+}) {
   const [newBikeState, setNewBikeState] = useState({
     name: "",
     parts: {},
   });
 
-  const handleAddNewBike = () => {
-    async function updateData() {
-      const newBikes = [
-        ...bikesState.availableBikes,
-        {
-          id: bikesState.availableBikes.length + 1,
-          name: newBikeState.name,
-          parts: newBikeState.parts,
-        },
-      ];
-      const result = await updateBikes(newBikes);
-
-      dispatch({
-        type: "update",
-        availableBikes: result,
-      });
-    }
-
-    updateData();
+  function handleAddNewBike() {
+    addNewBike(newBikeState);
     handleClose();
-  };
+  }
 
   function handleRadioSelect(category, option) {
     setNewBikeState({

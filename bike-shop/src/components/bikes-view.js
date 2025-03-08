@@ -1,13 +1,16 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useReducer, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import CloseButton from "react-bootstrap/CloseButton";
 import NewBikeModal from "./new-bike-modal";
-import { BikesContext } from "../contexts/BikesContext";
+import bikesReducer, { initialBikesState } from "../reducers/bikesReducer";
 import { getBikes, updateBikes } from "../Router";
 
 function BikesView({ internal, addItemToCart, availableOptions }) {
+  const [bikesState, bikesDispatch] = useReducer(
+    bikesReducer,
+    initialBikesState
+  );
   const [showModal, setShowModal] = useState(false);
-  const { bikesState, dispatch } = useContext(BikesContext);
 
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
@@ -16,7 +19,7 @@ function BikesView({ internal, addItemToCart, availableOptions }) {
     async function fetchData() {
       const result = await getBikes();
 
-      dispatch({
+      bikesDispatch({
         type: "update",
         availableBikes: result,
       });
@@ -25,6 +28,27 @@ function BikesView({ internal, addItemToCart, availableOptions }) {
     fetchData();
   }, []);
 
+  const addNewBike = (newBikeState) => {
+    async function updateData() {
+      const newBikes = [
+        ...bikesState.availableBikes,
+        {
+          id: bikesState.availableBikes.length + 1,
+          name: newBikeState.name,
+          parts: newBikeState.parts,
+        },
+      ];
+      const result = await updateBikes(newBikes);
+
+      bikesDispatch({
+        type: "update",
+        availableBikes: result,
+      });
+    }
+
+    updateData();
+  };
+
   const removeBike = (id) => {
     async function updateData() {
       const newBikes = bikesState.availableBikes.filter(
@@ -32,7 +56,7 @@ function BikesView({ internal, addItemToCart, availableOptions }) {
       );
       const result = await updateBikes(newBikes);
 
-      dispatch({
+      bikesDispatch({
         type: "update",
         availableBikes: result,
       });
@@ -49,6 +73,7 @@ function BikesView({ internal, addItemToCart, availableOptions }) {
           showModal={showModal}
           handleClose={() => handleClose()}
           availableOptions={availableOptions}
+          addNewBike={(newBikeState) => addNewBike(newBikeState)}
         />
         <Button onClick={handleShow}>Add Bike</Button>
       </div>

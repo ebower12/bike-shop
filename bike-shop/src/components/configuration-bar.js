@@ -1,11 +1,11 @@
-import { useContext, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { ConfigContext } from "../contexts/ConfigContext";
+import configReducer, { initialConfigState } from "../reducers/configReducer";
 import { getAvailableOptions } from "../Router";
 
 export default function ConfigurationBar({ addItemToCart }) {
-  const { configState, dispatch } = useContext(ConfigContext);
+  const [configState, dispatch] = useReducer(configReducer, initialConfigState);
 
   useEffect(() => {
     async function fetchData() {

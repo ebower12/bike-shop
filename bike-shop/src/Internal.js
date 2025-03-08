@@ -1,5 +1,5 @@
 import "./css/internal.css";
-import { useState, useContext, useEffect } from "react";
+import { useState, useReducer, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import CloseButton from "react-bootstrap/CloseButton";
@@ -7,14 +7,14 @@ import Dropdown from "react-bootstrap/Dropdown";
 import InputGroup from "react-bootstrap/InputGroup";
 import NavBar from "./components/nav-bar";
 import BikesView from "./components/bikes-view";
-import { ConfigContext } from "./contexts/ConfigContext";
+import configReducer, { initialConfigState } from "./reducers/configReducer";
 import { getAvailableOptions, updateAvailableOptions } from "./Router";
 
 function InternalApp() {
   const [newPartName, setNewPartName] = useState("");
   const [newCategoryName, setNewCategoryName] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("frame");
-  const { configState, dispatch } = useContext(ConfigContext);
+  const [configState, dispatch] = useReducer(configReducer, initialConfigState);
 
   useEffect(() => {
     async function fetchData() {

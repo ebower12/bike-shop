@@ -1,17 +1,17 @@
 import "./css/App.css";
-import { useContext, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 import { useNavigate } from "react-router";
 import Button from "react-bootstrap/Button";
 import NavBar from "./components/nav-bar";
 import BikesView from "./components/bikes-view";
 import ConfigurationBar from "./components/configuration-bar";
-import { CartContext } from "./contexts/CartContext";
-import { ConfigContext } from "./contexts/ConfigContext";
+import cartReducer, { initialCartState } from "./reducers/cartReducer";
+import configReducer, { initialConfigState } from "./reducers/configReducer";
 import { getCart, updateCart } from "./Router";
 
 function App() {
-  const { configState } = useContext(ConfigContext);
-  const { cartState, cartDispatch } = useContext(CartContext);
+  const [configState] = useReducer(configReducer, initialConfigState);
+  const [cartState, cartDispatch] = useReducer(cartReducer, initialCartState);
   const navigate = useNavigate();
 
   useEffect(() => {
