@@ -32,7 +32,7 @@ export default function ConfigurationBar({ addItemToCart }) {
     });
   }
 
-  function isValidConfig(category, option) {
+  function inValidConfig(category, option) {
     if (configState.selectedOptions.wheels === "Mountain") {
       return category === "frame" && option !== "Full-Suspension";
     } else if (configState.selectedOptions.wheels === "Fat Bike") {
@@ -61,7 +61,7 @@ export default function ConfigurationBar({ addItemToCart }) {
               label={option}
               key={`${category}-${option}`}
               disabled={
-                isValidConfig(category, option) ||
+                inValidConfig(category, option) ||
                 option.includes("Out of Stock")
               }
               checked={configState.selectedOptions[category] === option}

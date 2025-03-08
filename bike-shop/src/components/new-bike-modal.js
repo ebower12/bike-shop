@@ -37,6 +37,14 @@ function NewBikeModal({
     });
   }
 
+  function inValidConfig(category, option) {
+    if (newBikeState.parts.wheels === "Mountain") {
+      return category === "frame" && option !== "Full-Suspension";
+    } else if (newBikeState.parts.wheels === "Fat Bike") {
+      return category === "rimColor";
+    } else return false;
+  }
+
   const listOptions = () =>
     Object.keys(availableOptions).map((category) => {
       const options = availableOptions[category].map((option) => {
@@ -46,6 +54,9 @@ function NewBikeModal({
             id={option}
             label={option}
             key={`${category}-${option}`}
+            disabled={
+              inValidConfig(category, option) || option.includes("Out of Stock")
+            }
             checked={newBikeState.parts[category] === option}
             onChange={() => handleRadioSelect(category, option)}
           />
